@@ -1,17 +1,34 @@
 import pygame
 import math
 
-class Cube:
+class App:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
-        self.center = pygame.display.get_surface().get_rect().center
-
+        self.Cubes = []
         self.size = 100
-        self.pos = [0, 0, 0]
+        for i in range(4):
+            cube = Cube(i, 0, 0, 100, self.screen)
+            self.Cubes.append(cube)
+
+
+    def run(self):
+        while True:
+            for cube in self.Cubes:
+                cube.update()
+                cube.draw()
+            pygame.display.flip()
+            self.clock.tick(60)
+
+class Cube:
+    def __init__(self, x, y, z, size, screen):
+        self.screen = screen
+        self.size = size
+        self.pos = [x, y, z]
         self.angle = [0, 0, 0]
         self.edge_mode = True
+        self.center = pygame.display.get_surface().get_rect().center
         
         self.Corners = [
             [1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1],
@@ -91,6 +108,7 @@ class Cube:
         if keys[pygame.K_x]:
             self.pos = [0, 0, 0]
             self.angle = [0, 0, 0]
+            self.size = 100
 
     def rotate_point(self, x, y, z):
         # Rotate around X axis
@@ -150,13 +168,5 @@ class Cube:
                 pygame.draw.polygon(self.screen, (0, 0, 0), points, 2)
 
 
-    def run(self):
-        while True:
-            self.update()
-            self.draw()
-            pygame.display.flip()
-            self.clock.tick(60)
-
-if __name__ == "__main__":
-    cube = Cube()
-    cube.run()
+app = App()
+app.run()
